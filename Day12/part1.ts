@@ -1,4 +1,4 @@
-import { input, sample } from "./input";
+import { HarmenInput, input, sample } from "./input";
 
 type Point = {
     x: number
@@ -16,7 +16,7 @@ type Node = {
     isOnClosedList: boolean
 }
 
-const weights = '.abcdefghijklmnopqrstuvwxyz'
+const weights = '.abcdefghijklmnopqrstuvwxyz';
 
 let start: Node = {position:{x:0,y:0},h:0,f:0,g:0,weight:0,isOnClosedList:true,isOnOpenList:true}
 let end: Node = start
@@ -78,6 +78,7 @@ const findPath = (start: Point, end: Point) => {
     openSet.push(startNode)
 
     world.forEach(row => row.forEach(node => node.h = calcHeuristic(node.position, endNode.position, node.weight )))
+    
     while(openSet.length !== 0){
         // get the node with the lowest F
         const currentNode = getLowest(openSet)
@@ -103,18 +104,31 @@ const findPath = (start: Point, end: Point) => {
             }
 
             const nextGValue = currentNode.g + neighbor.weight
-            
-                if(neighbor.weight <= currentNode.weight + 1){
+            // const h = calcHeuristic(neighbor.position, end, neighbor.weight)
+
+            if(currentNode.position.x < 10 && currentNode.position.y < 20 && currentNode.position.y > 9){
+                console.log(
+                    {position: currentNode.position, weight: currentNode.weight, g: currentNode.g}, 
+                    {position: neighbor.position, weight: neighbor.weight, g: neighbor.g}
+                    )
+            }
+
+            if(openSet.some(node => node.position.x === neighbor.position.x && node.position.y === neighbor.position.y)){
+            if(nextGValue < neighbor.weight){
                 neighbor.g = nextGValue
                 neighbor.parentNode = currentNode
 
-                if(!neighbor.isOnOpenList){
+                if(!neighbor.isOnOpenList){``
                     neighbor.isOnOpenList = true
                     openSet.push(neighbor)
                 } else {
                     neighbor.parentNode = currentNode
                 }
             }
+        }
+        }
+        if(currentNode.position.x < 10 && currentNode.position.y < 20 && currentNode.position.y > 9){
+        console.log('\n')
         }
     }
 
