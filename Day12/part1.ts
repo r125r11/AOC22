@@ -1,4 +1,4 @@
-import { input, sample } from "./input";
+import { HarmenInput, input, sample } from "./input";
 
 type Point = {
     x: number
@@ -30,7 +30,7 @@ type Node = {
     value: string
 }
 
-const weights = '.abcdefghijklmnopqrstuvwxyz'
+const weights = '.abcdefghijklmnopqrstuvwxyz';
 
 let start: Node = {position:{x:0,y:0},h:0,f:0,g:0,weight:0,isOnClosedList:true,isOnOpenList:true,value:''}
 let end: Node = start
@@ -89,9 +89,12 @@ const findPath = (start: Point, end: Point) => {
     startNode.isOnOpenList = true
     openSet.push(startNode)
 
-    // calc heuristic
-    // world.forEach(row => row.forEach(node => node.h = calcHeuristic(node.position, endNode.position, node.weight )))
-    // world.forEach(row => row.forEach(node => node.f = node.h + node.g))
+    world.forEach(row => row.forEach(node => node.h = calcHeuristic(node.position, endNode.position, node.weight )))
+    
+    while(openSet.length !== 0){
+        // get the node with the lowest F
+        const currentNode = getLowest(openSet)
+        // console.log(openSet.map(node => node.g + node.h), currentNode.f)
 
     //AStar
     // while(openSet.length !== 0){
@@ -122,52 +125,33 @@ const findPath = (start: Point, end: Point) => {
     //             continue
     //         }
 
-    //         const nextGValue = currentNode.g + ((neighbor.position.x !== currentNode.position.x || neighbor.position.y !== currentNode.position.y) ? neighbor.weight : neighbor.weight * 1.41421)
-            
-    //         if(!neighbor.isOnOpenList || nextGValue < neighbor.g){
-    //             neighbor.g = nextGValue
-    //             neighbor.f = nextGValue + neighbor.h
-    //             neighbor.parentNode = currentNode
+            const nextGValue = currentNode.g + neighbor.weight
+            // const h = calcHeuristic(neighbor.position, end, neighbor.weight)
 
-    //             if(!neighbor.isOnOpenList && neighbor.weight <= currentNode.weight + 1){
-    //                 neighbor.isOnOpenList = true
-    //                 openSet.push(neighbor)
-    //             } else {
-    //                 neighbor.parentNode = currentNode
-    //             }
-    //         }
-    //     }
-    //     if(currentNode.position.x <= 5 && currentNode.position.y <= 5){
-    //         console.log('')
-    //     }
-    // }
+            if(currentNode.position.x < 10 && currentNode.position.y < 20 && currentNode.position.y > 9){
+                console.log(
+                    {position: currentNode.position, weight: currentNode.weight, g: currentNode.g}, 
+                    {position: neighbor.position, weight: neighbor.weight, g: neighbor.g}
+                    )
+            }
 
-    //Drijkstra
-    while(true){
-        const currentNode = getLowest(openSet)
-        const neighbors = getSurroundingNodes(currentNode.position)
-        openSet.splice(openSet.findIndex(item => item.position.x === currentNode.position.x && item.position.y === currentNode.position.y), 1)
-        
-        if(currentNode.position.x === end.x && currentNode.position.y === end.y){
-            return currentNode
-        }
-        
-        neighbors.forEach(neighbor => {
-            if (neighbor.weight - currentNode.weight <= 1) {
-                const totalRisk = currentNode.f + 1
-                if (totalRisk < (neighbor.f > 0 ? neighbor.f: Number.MAX_SAFE_INTEGER)) {
-                    world[neighbor.position.y][neighbor.position.x].f = totalRisk
-                    const itemIndex = openSet.findIndex(item => item.position.x === neighbor.position.x && item.position.y === neighbor.position.y)
-                    if(itemIndex > -1){
-                        openSet[itemIndex].f = totalRisk
-                    } else {
-                        openSet.push({...neighbor, f: totalRisk})
-                    }
-                    // console.log(currentNode.position, neighbors.map(i => i.position))
+            if(openSet.some(node => node.position.x === neighbor.position.x && node.position.y === neighbor.position.y)){
+            if(nextGValue < neighbor.weight){
+                neighbor.g = nextGValue
+                neighbor.parentNode = currentNode
+
+                if(!neighbor.isOnOpenList){``
+                    neighbor.isOnOpenList = true
+                    openSet.push(neighbor)
+                } else {
+                    neighbor.parentNode = currentNode
                 }
             }
-        })
-
+        }
+        }
+        if(currentNode.position.x < 10 && currentNode.position.y < 20 && currentNode.position.y > 9){
+        console.log('\n')
+        }
     }
 
     return []

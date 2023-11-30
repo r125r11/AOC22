@@ -1,6 +1,6 @@
-import { input, sample } from "./input";
+import { input2, sample } from "./input";
 
-const output = input
+const output = input2
     .split(/\r?\n/)
     .map(pair => pair.split(','))
     .reduce((acc, curr)=>{

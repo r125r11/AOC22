@@ -49,20 +49,31 @@ function checkPositionDupes(position: Position) {
 }
 
 function updatePositions() {
-    k1 = updatePosition(headPos, k1);
-    k2 = updatePosition(k1, k2);
-    k3 = updatePosition(k2, k3);
-    k4 = updatePosition(k3, k4);
-    k5 = updatePosition(k4, k5);
-    k6 = updatePosition(k5, k6);
-    k7 = updatePosition(k6, k7);
-    k8 = updatePosition(k7, k8);
-    k9 = updatePosition(k8, k9);
+    k1 = updatePosition(headPos, k1, 'k1');
+    k2 = updatePosition(k1, k2, 'k2');
+    k3 = updatePosition(k2, k3, 'k3');
+    k4 = updatePosition(k3, k4, 'k4');
+    k5 = updatePosition(k4, k5, 'k5');
+    k6 = updatePosition(k5, k6, 'k6');
+    k7 = updatePosition(k6, k7, 'k7');
+    k8 = updatePosition(k7, k8, 'k8');
+    k9 = updatePosition(k8, k9, 'k9');
+    // console.log(
+        // k1
+// ,k2
+// ,k3
+// ,k4
+// ,k5
+// ,k6
+// ,k7
+// ,k8
+// ,k9
+    // )
     checkPositionDupes(k9)
 }
 
-function updatePosition(head: Position, tail: Position) {
-    let returnPos:Position = {x:0, y: 0}
+function updatePosition(head: Position, tail: Position, node: string) {
+    let returnPos:Position = tail
     if (Math.abs(head.x - tail.x) > 1) {
         // horizontal
         if (head.x < tail.x) {
@@ -72,10 +83,10 @@ function updatePosition(head: Position, tail: Position) {
         }
         // diagonal
         if (head.y < tail.y) {
-            returnPos = { x: tail.x, y: tail.y - 1 };
+            returnPos = { x: returnPos.x, y: tail.y - 1 };
         }
         if (head.y > tail.y) {
-            returnPos = { x: tail.x, y: tail.y + 1 };
+            returnPos = { x: returnPos.x, y: tail.y + 1 };
         }
         // console.log('horizontal move', head.x - returnPos.x, head, returnPos);
     }
@@ -88,13 +99,14 @@ function updatePosition(head: Position, tail: Position) {
         }
         // diagonal
         if (head.x < tail.x) {
-            returnPos = { x: tail.x - 1, y: tail.y };
+            returnPos = { x: tail.x - 1, y: returnPos.y };
         }
         if (head.x > tail.x) {
-            returnPos = { x: tail.x + 1, y: tail.y };
+            returnPos = { x: tail.x + 1, y: returnPos.y };
         }
         // console.log('vertical move', head.y - returnPos.y, head, returnPos);
     }
+    // console.log(returnPos, node)
     return returnPos
 }
 
